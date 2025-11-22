@@ -1,92 +1,72 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
 using TechFlowSolutions.Data;
 using TechFlowSolutions.Models;
 
 namespace TechFlowSolutions.Controllers
 {
-    public class UsuariosController : Controller
+    [Route("api/usuario")]
+    [ApiController]
+    public class UsuarioController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _db;
 
-        public UsuariosController(ApplicationDbContext context)
+        public UsuarioController(ApplicationDbContext db)
         {
-            _context = context;
+            _db = db;
         }
 
-        // LISTAR
-        public IActionResult Index()
+        [HttpGet]
+        public IActionResult Listar()
         {
-            var lista = _context.Usuario.ToList();
-            return View(lista);
+            return Ok(_db.Usuarios.ToList());
         }
 
-        // GET: CRIAR
-        public IActionResult Criar()
+        [HttpGet("{id}")]
+        public IActionResult Buscar(int id)
         {
-            return View();
+            var usuario = _db.Usuarios.Find(id);
+            if (usuario == null) return NotFound();
+
+            return Ok(usuario);
         }
 
-        // POST: CRIAR
         [HttpPost]
-        public IActionResult Criar(Usuario usuario)
+        public IActionResult Criar([FromBody] Usuario user)
         {
-            if (!ModelState.IsValid)
-                return View(usuario);
+            user.DataCadastro = DateTime.Now;
+            _db.Usuarios.Add(user);
+            _db.SaveChanges();
 
-            _context.Usuario.Add(usuario);
-            _context.SaveChanges();
-
-            return RedirectToAction("Index");
+            return Ok(user);
         }
 
-        // GET: EDITAR
-        public IActionResult Editar(int id)
+        [HttpPut("{id}")]
+        public IActionResult Atualizar(int id, [FromBody] Usuario u)
         {
-            var usuario = _context.Usuario.Find(id);
+            var usuario = _db.Usuarios.Find(id);
+            if (usuario == null) return NotFound();
 
-            if (usuario == null)
-                return NotFound();
+            usuario.Nome = u.Nome;
+            usuario.Email = u.Email;
+            usuario.SenhaHash = u.SenhaHash;
+            usuario.Perfil = u.Perfil;
+            usuario.SetorId = u.SetorId;
 
-            return View(usuario);
+            _db.SaveChanges();
+
+            return Ok(usuario);
         }
 
-        // POST: EDITAR
-        [HttpPost]
-        public IActionResult Editar(Usuario usuario)
+        [HttpDelete("{id}")]
+        public IActionResult Remover(int id)
         {
-            if (!ModelState.IsValid)
-                return View(usuario);
+            var usuario = _db.Usuarios.Find(id);
+            if (usuario == null) return NotFound();
 
-            _context.Usuario.Update(usuario);
-            _context.SaveChanges();
-            return RedirectToAction("Index");
-        }
+            _db.Usuarios.Remove(usuario);
+            _db.SaveChanges();
 
-        // CONFIRMAR EXCLUSÃO
-        public IActionResult Excluir(int id)
-        {
-            var usuario = _context.Usuario.Find(id);
-
-            if (usuario == null)
-                return NotFound();
-
-            return View(usuario);
-        }
-
-        // POST EXCLUSÃO
-        [HttpPost, ActionName("Excluir")]
-        public IActionResult ExcluirConfirmado(int id)
-        {
-            var usuario = _context.Usuario.Find(id);
-
-            if (usuario == null)
-                return NotFound();
-
-            _context.Usuario.Remove(usuario);
-            _context.SaveChanges();
-
-            return RedirectToAction("Index");
+            return Ok(new { message = "Usuário removido com sucesso" });
         }
     }
 }

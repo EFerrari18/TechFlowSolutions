@@ -1,40 +1,43 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Linq;
 using TechFlowSolutions.Data;
+using TechFlowSolutions.Models;
 
 namespace TechFlowSolutions.Controllers
 {
-    public class FaqController : BaseAdminController
+    [ApiController]
+    [Route("api/faq")]
+    public class FaqController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _db;
 
-        public FaqController(ApplicationDbContext context)
+        public FaqController(ApplicationDbContext db)
         {
-            _context = context;
+            _db = db;
         }
 
-        public IActionResult Index(string termo)
+        [HttpGet]
+        public IActionResult Listar() => Ok(_db.FaqItens.OrderBy(f => f.Pergunta).ToList());
+
+        [HttpPost]
+        public IActionResult Criar([FromBody] FaqItem model)
         {
-            var redirect = RedirectIfNotAdmin();
-            if (redirect != null) return redirect;
+            model.DataCadastro = DateTime.Now;
 
-            var query = _context.FaqItem.AsQueryable();
+            _db.FaqItens.Add(model);
+            _db.SaveChanges();
 
-            if (!string.IsNullOrWhiteSpace(termo))
-            {
-                termo = termo.ToLower();
-                query = query.Where(f =>
-                    f.Pergunta.ToLower().Contains(termo) ||
-                    f.Resposta.ToLower().Contains(termo));
-            }
+            return Ok(model);
+        }
 
-            var lista = query
-                .OrderBy(f => f.Pergunta)
-                .ToList();
+        [HttpDelete("{id}")]
+        public IActionResult Remover(int id)
+        {
+            var item = _db.FaqItens.Find(id);
+            if (item == null) return NotFound();
 
-            ViewBag.Termo = termo;
-
-            return View(lista);
+            _db.FaqItens.Remove(item);
+            _db.SaveChanges();
+            return Ok(new { message = "Item removido" });
         }
     }
 }

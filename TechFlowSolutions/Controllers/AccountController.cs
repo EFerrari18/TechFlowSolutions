@@ -27,7 +27,7 @@ namespace TechFlowSolutions.Controllers
         public IActionResult Login(string email, string senha)
         {
             // aqui estou usando SenhaHash como senha simples
-            var user = _context.Usuario
+            var user = _context.Usuarios
                 .FirstOrDefault(u => u.Email == email && u.SenhaHash == senha);
 
             if (user == null || user.Perfil != "Administrador")

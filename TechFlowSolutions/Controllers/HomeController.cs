@@ -1,30 +1,55 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using TechFlowSolutions.Data;
+using TechFlowSolutions.Models;
 
-public class HomeController : Controller
+namespace TechFlowSolutions.Controllers
 {
-    private readonly ApplicationDbContext _context;
-
-    public HomeController(ApplicationDbContext context)
+    public class HomeController : Controller
     {
-        _context = context;
-    }
+        private readonly ApplicationDbContext _db;
 
-    public IActionResult Index()
-    {
-        // Agrupa os chamados por status
-        var dadosGrafico = _context.Chamado
-            .GroupBy(x => x.Status)
-            .Select(g => new
+        public HomeController(ApplicationDbContext db)
+        {
+            _db = db;
+        }
+
+        public IActionResult Index()
+        {
+            var model = new DashboardViewModel
             {
-                status = g.Key,
-                quantidade = g.Count()
-            })
-            .ToList();
+                TotalAbertos = _db.Chamados.Count(c => c.Status == "Aberto"),
+                TotalEmAtendimento = _db.Chamados.Count(c => c.Status == "Em Atendimento"),
+                TotalResolvidos = _db.Chamados.Count(c => c.Status == "Resolvido"),
+                TotalFechados = _db.Chamados.Count(c => c.Status == "Fechado"),
 
-        ViewBag.DadosGrafico = dadosGrafico;
+                ChamadosRecentes = _db.Chamados
+                    .OrderByDescending(c => c.DataAbertura)
+                    .Take(10)
+                    .ToList()
+            };
 
-        return View();
+            return View(model);
+        }
+
+        // ==== API PARA O GRÁFICO ====
+
+        [HttpGet]
+        public IActionResult GetChamadosPorMes()
+        {
+            var dados = _db.Chamados
+                .GroupBy(c => new { c.DataAbertura.Month, c.DataAbertura.Year })
+                .Select(g => new
+                {
+                    mes = g.Key.Month,
+                    ano = g.Key.Year,
+                    quantidade = g.Count()
+                })
+                .OrderBy(x => x.ano)
+                .ThenBy(x => x.mes)
+                .ToList();
+
+            return Json(dados);
+        }
     }
 }

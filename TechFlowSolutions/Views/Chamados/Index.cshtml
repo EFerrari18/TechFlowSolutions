@@ -5,12 +5,13 @@
 }
 
 <div class="card">
-
     <h1 class="page-title">Gerenciar Chamados</h1>
 
-    <a href="/Chamados/Novo" class="btn btn-primary" style="margin-bottom:15px;">+ Novo Chamado</a>
+    <p>
+        <a class="btn" href="/Chamados/Novo">Abrir Novo Chamado</a>
+    </p>
 
-    <table class="tabela">
+    <table>
         <thead>
             <tr>
                 <th>Título</th>
@@ -20,73 +21,23 @@
                 <th>Ações</th>
             </tr>
         </thead>
-
         <tbody>
-            <tr>
-                <td>Erro no sistema</td>
-                <td>Aberto</td>
-                <td>Alta</td>
-                <td>22/11/2025</td>
-                <td>
-                    <a href="/Chamados/Editar/" class="btn btn-secondary">Editar</a>
-                    <a href="/Usuarios/Excluir/" class="btn btn-danger"
-                       onclick="return confirm('Deseja realmente excluir este Chamado?');">
-                        Excluir
-                </td>
-            </tr>
-
-            <tr>
-                <td>Instalar impressora</td>
-                <td>Em Atendimento</td>
-                <td>Média</td>
-                <td>21/11/2025</td>
-                <td>
-                    <a href="/Chamados/Editar/" class="btn btn-secondary">Editar</a>
-                    <a href="/Usuarios/Excluir/" class="btn btn-danger"
-                       onclick="return confirm('Deseja realmente excluir este Chamado?');">
-                        Excluir
-                </td>
-            </tr>
-
-            <tr>
-                <td>Trocar mouse</td>
-                <td>Resolvido</td>
-                <td>Baixa</td>
-                <td>20/11/2025</td>
-                <td>
-                    <a href="/Chamados/Editar/" class="btn btn-secondary">Editar</a>
-                    <a href="/Usuarios/Excluir/" class="btn btn-danger"
-                       onclick="return confirm('Deseja realmente excluir este Chamado?');">
-                        Excluir
-                </td>
-            </tr>
-
-            <tr>
-                <td>Configurar e-mail</td>
-                <td>Aberto</td>
-                <td>Média</td>
-                <td>22/11/2025</td>
-                <td>
-                    <a href="/Chamados/Editar/" class="btn btn-secondary">Editar</a>
-                    <a href="/Usuarios/Excluir/" class="btn btn-danger"
-                       onclick="return confirm('Deseja realmente excluir este Chamado?');">
-                        Excluir
-                </td>
-            </tr>
-
-            <tr>
-                <td>Atualização do Windows</td>
-                <td>Fechado</td>
-                <td>Alta</td>
-                <td>19/11/2025</td>
-                <td>
-                    <a href="/Chamados/Editar/" class="btn btn-secondary">Editar</a>
-                    <a href="/Usuarios/Excluir/" class="btn btn-danger"
-                       onclick="return confirm('Deseja realmente excluir este Chamado?');">
-                        Excluir
-                </td>
-            </tr>
+            @foreach (var c in Model)
+            {
+                <tr>
+                    <td>@c.Titulo</td>
+                    <td>@c.Status</td>
+                    <td>@c.Prioridade</td>
+                    <td>@c.DataAbertura.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>
+                        <a href="/Chamados/Editar/@c.IdChamado" class="btn btn-secondary">Editar</a>
+                        <a href="/Usuario/Ecluir/@c.IdChamado" class="btn btn-danger"
+                           onclick="return confirm('Deseja realmente excluir este Chamnado?');">
+                            Excluir
+                       
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
-
 </div>

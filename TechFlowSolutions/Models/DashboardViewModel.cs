@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace TechFlowSolutions.Models
+﻿namespace TechFlowSolutions.Models
 {
     public class DashboardViewModel
     {
@@ -9,6 +7,6 @@ namespace TechFlowSolutions.Models
         public int TotalResolvidos { get; set; }
         public int TotalFechados { get; set; }
 
-        public IEnumerable<Chamado> ChamadosRecentes { get; set; }
+        public List<Chamado>? ChamadosRecentes { get; set; }
     }
 }

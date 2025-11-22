@@ -1,0 +1,23 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+
+    <img src="~/lib/logo-techflow.png" class="logo-techflow" />
+
+    <form method="post" asp-action="Login">
+
+        <input type="email" name="Email" placeholder="E-mail" required />
+
+        <input type="password" name="Senha" placeholder="Senha" required />
+
+        <button class="btn">ENTRAR</button>
+
+    </form>
+
+    @if (ViewBag.Erro != null)
+    {
+        <p style="color:red; margin-top:10px;">@ViewBag.Erro</p>
+    }
+</div>

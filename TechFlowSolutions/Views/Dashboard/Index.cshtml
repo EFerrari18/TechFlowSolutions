@@ -1,0 +1,113 @@
+﻿<div class="card" style="max-width:700px; margin:auto;">
+    <h2>Chamados Criados por Mês</h2>
+    <canvas id="graficoChamados"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    async function carregarGrafico() {
+        const resp = await fetch("/Home/GetChamadosPorMes");
+        const data = await resp.json();
+
+        const meses = data.map(x => x.mes + "/" + x.ano);
+        const quantidades = data.map(x => x.quantidade);
+
+        new Chart(document.getElementById("graficoChamados"), {
+            type: "bar",
+            data: {
+                labels: meses,
+                datasets: [{
+                    label: "Chamados criados",
+                    data: quantidades,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+    }
+
+    carregarGrafico();
+</script>
+@model TechFlowSolutions.Models.DashboardViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Dashboard";
+}
+
+<div class="card">
+    <h1 class="page-title">Dashboard de Chamados</h1>
+
+    <div style="display:flex; gap:24px; flex-wrap:wrap;">
+
+        <div style="flex:1; min-width:260px;">
+            <canvas id="graficoStatus"></canvas>
+        </div>
+
+        <div style="flex:1.2; min-width:320px;">
+            <h2 style="margin-top:0;">Chamados Recentes</h2>
+
+            @if (Model.ChamadosRecentes == null || !Model.ChamadosRecentes.Any())
+            {
+                <p>Nenhum chamado encontrado.</p>
+            }
+            else
+            {
+                <table class="tabela">
+                    <thead>
+                        <tr>
+                            <th>Título</th>
+                            <th>Status</th>
+                            <th>Prioridade</th>
+                            <th>Data</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var c in Model.ChamadosRecentes)
+                        {
+                            <tr>
+                                <td>@c.Titulo</td>
+                                <td>@c.Status</td>
+                                <td>@c.Prioridade</td>
+                                <td>@c.DataAbertura.ToString("dd/MM/yyyy HH:mm")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('graficoStatus');
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Aberto', 'Em Atendimento', 'Resolvido', 'Fechado'],
+                datasets: [{
+                    label: 'Chamados',
+                    data: [
+                        @Model.TotalAbertos,
+                        @Model.TotalEmAtendimento,
+                        @Model.TotalResolvidos,
+                        @Model.TotalFechados
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    </script>
+}

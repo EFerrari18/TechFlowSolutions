@@ -1,0 +1,41 @@
+﻿@model IEnumerable<TechFlowSolutions.Models.Usuario>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Gerenciar Usuários";
+}
+
+<div class="card">
+    <h1 class="page-title">Gerenciar Usuários</h1>
+
+        <a href="/Usuarios/Criar" class="btn btn-primary">+ Novo Usuário</a>
+
+    <table class="tabela">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Perfil</th>
+                <th>Data Cadastro</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var u in Model)
+            {
+                <tr>
+                    <td>@u.Nome</td>
+                    <td>@u.Email</td>
+                    <td>@u.Perfil</td>
+                    <td>@u.DataCadastro.ToString("dd/MM/yyyy")</td>
+                    <td>
+                        <a href="/Usuarios/Editar/@u.IdUsuario" class="btn btn-secondary">Editar</a>
+                        <a href="/Usuarios/Excluir/@u.IdUsuario" class="btn btn-danger"
+                           onclick="return confirm('Deseja realmente excluir este usuário?');">
+                            Excluir
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

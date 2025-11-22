@@ -1,0 +1,77 @@
+﻿@model TechFlowSolutions.Models.Usuario
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Gerenciar Usuários";
+}
+
+<style>
+    body {
+        background: #f2f2f2;
+    }
+
+    .container {
+        width: 50%;
+        margin: 150px auto;
+    }
+
+    .card {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 4px 18px rgba(0,0,0,.15);
+    }
+
+    h1 {
+        font-size: 28px;
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-weight: bold;
+        margin-top: 10px;
+        display: block;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        margin-bottom: 15px;
+    }
+
+    .btn {
+        background: #B4FF00;
+        font-weight: bold;
+        padding: 10px 25px;
+        border-radius: 8px;
+        text-decoration: none;
+    }
+</style>
+
+<div class="container">
+    <div class="card">
+        <h1>Editar Usuário</h1>
+
+        <form method="post">
+
+            <input type="hidden" name="IdUsuario" value="@Model.IdUsuario" />
+
+            <label>Nome</label>
+            <input name="Nome" value="@Model.Nome" />
+
+            <label>Email</label>
+            <input name="Email" value="@Model.Email" />
+
+            <label>Perfil</label>
+            <select name="Perfil">
+                <option @(Model.Perfil == "Administrador" ? "selected" : "")>Administrador</option>
+                <option @(Model.Perfil == "Tecnico" ? "selected" : "")>Tecnico</option>
+                <option @(Model.Perfil == "Usuario" ? "selected" : "")>Usuario</option>
+            </select>
+
+            <button class="btn">Salvar</button>
+
+        </form>
+    </div>
+</div>

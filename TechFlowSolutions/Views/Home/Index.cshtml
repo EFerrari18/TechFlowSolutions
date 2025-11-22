@@ -1,0 +1,43 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Dashboard";
+}
+
+<div class="card" style="max-width: 700px; margin: 0 auto;">
+    <h1 class="page-title">Estatísticas de Chamados</h1>
+
+    <canvas id="graficoChamados" height="120"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+    // Converte os dados vindos do Controller
+    var dados = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.DadosGrafico));
+
+    var labels = dados.map(x => x.status);
+    var valores = dados.map(x => x.quantidade);
+
+    const ctx = document.getElementById('graficoChamados');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Chamados por Status',
+                data: valores,
+                backgroundColor: '#B4FF00',
+                borderColor: '#000000',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+</script>

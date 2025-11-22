@@ -1,0 +1,97 @@
+﻿@model IEnumerable<TechFlowSolutions.Models.FaqItem>
+
+@{
+    ViewBag.Title = "FAQ Inteligente";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .faq-container {
+        max-width: 900px;
+        margin: 0 auto;
+        background: white;
+        padding: 32px;
+        border-radius: 16px;
+        box-shadow: 0 4px 18px rgba(0,0,0,0.15);
+    }
+
+    h1 {
+        margin-top: 0;
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    .faq-search {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        margin-bottom: 16px;
+    }
+
+    .btn-buscar {
+        width: 100%;
+        padding: 14px;
+        font-size: 18px;
+        background: #B4FF00;
+        border: none;
+        border-radius: 10px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-bottom: 20px;
+    }
+
+        .btn-buscar:hover {
+            opacity: 0.85;
+        }
+
+    .faq-item {
+        padding: 14px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .faq-pergunta {
+        font-weight: bold;
+        font-size: 18px;
+        margin-bottom: 6px;
+    }
+
+    .faq-resposta {
+        font-size: 15px;
+        color: #444;
+    }
+
+    .no-result {
+        font-size: 16px;
+        color: #666;
+        text-align: center;
+        padding: 20px 0;
+    }
+</style>
+
+<div class="faq-container">
+
+    <h1>FAQ Inteligente</h1>
+
+    <form method="get">
+        <input type="text" name="q" class="faq-search" placeholder="Digite uma palavra-chave..." value="@ViewBag.Search">
+        <button type="submit" class="btn-buscar">Buscar</button>
+    </form>
+
+    @if (!Model.Any())
+    {
+        <p class="no-result">Nenhuma resposta encontrada para o termo.</p>
+    }
+    else
+    {
+        foreach (var item in Model)
+        {
+            <div class="faq-item">
+                <div class="faq-pergunta">@item.Pergunta</div>
+                <div class="faq-resposta">@item.Resposta</div>
+            </div>
+        }
+    }
+</div>

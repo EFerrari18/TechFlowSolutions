@@ -1,0 +1,19 @@
+﻿@model TechFlowWeb.ViewModels.PerfilViewModel
+@{
+    ViewBag.Title = "Editar Perfil";
+}
+
+    <div class="card">
+        <h2 class="titulo">Editar Perfil</h2>
+
+        <form method="post">
+            <input class="input" name="Nome" value="@Model.Nome" />
+            <input class="input" name="Email" value="@Model.Email" />
+            <input class="input" name="Telefone" placeholder="Telefone" />
+            <input class="input" name="Setor" placeholder="Setor / Departamento" />
+            <input class="input" name="Senha" placeholder="Nova senha" />
+            <input class="input" name="Senha2" placeholder="Confirmar nova senha" />
+
+            <button class="botao">Salvar alterações</button>
+        </form>
+    </div>

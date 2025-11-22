@@ -1,0 +1,38 @@
+﻿@model TechFlowSolutions.Models.Chamado
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Editar Chamado";
+}
+
+<div class="card form-box">
+    <h1 class="page-title">Editar Chamado</h1>
+
+    <form method="post">
+
+        <input type="hidden" asp-for="Id" />
+
+        <label>Título</label>
+        <input asp-for="Titulo" />
+
+        <label>Descrição</label>
+        <textarea asp-for="Descricao" rows="4"></textarea>
+
+        <label>Prioridade</label>
+        <select asp-for="Prioridade">
+            <option>Baixa</option>
+            <option>Média</option>
+            <option>Alta</option>
+        </select>
+
+        <label>Status</label>
+        <select asp-for="Status">
+            <option>Aberto</option>
+            <option>Em Atendimento</option>
+            <option>Resolvido</option>
+            <option>Fechado</option>
+        </select>
+
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a href="/Chamados/Index" class="btn btn-secondary">Voltar</a>
+    </form>
+</div>

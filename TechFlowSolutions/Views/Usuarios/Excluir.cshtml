@@ -1,0 +1,60 @@
+﻿@model TechFlowSolutions.Models.Usuario
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Gerenciar Usuários";
+}
+
+<style>
+    body {
+        background: #f2f2f2;
+    }
+
+    .container {
+        width: 50%;
+        margin: 150px auto;
+    }
+
+    .card {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        text-align: center;
+        box-shadow: 0 4px 18px rgba(0,0,0,.15);
+    }
+
+    h1 {
+        font-size: 28px;
+        margin-bottom: 20px;
+    }
+
+    .btn {
+        padding: 10px 25px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .btn-danger {
+        background: #ff3b57;
+        color: white;
+    }
+
+    .btn-back {
+        background: #ddd;
+    }
+</style>
+
+<div class="container">
+    <div class="card">
+
+        <h1>Excluir Usuário</h1>
+
+        <p>Tem certeza que deseja excluir o usuário <b>@Model.Nome</b>?</p>
+
+        <form method="post">
+            <button class="btn btn-danger">Excluir</button>
+            <a href="/Usuarios/Index" class="btn btn-back">Cancelar</a>
+        </form>
+
+    </div>
+</div>

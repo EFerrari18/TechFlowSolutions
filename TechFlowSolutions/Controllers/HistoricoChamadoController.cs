@@ -19,7 +19,7 @@ namespace TechFlowSolutions.Controllers
         [HttpGet("{chamadoId}")]
         public IActionResult ListarPorChamado(int chamadoId)
         {
-            var historico = _db.Historicos
+            var historico = _db.Historico
                 .Include(h => h.Tecnico)
                 .Include(h => h.Chamado)
                 .Where(h => h.ChamadoId == chamadoId)
@@ -33,7 +33,7 @@ namespace TechFlowSolutions.Controllers
         {
             model.DataRegistro = DateTime.Now;
 
-            _db.Historicos.Add(model);
+            _db.Historico.Add(model);
             _db.SaveChanges();
 
             return Ok(model);

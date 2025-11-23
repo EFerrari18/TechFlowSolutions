@@ -16,7 +16,7 @@ namespace TechFlowSolutions.Controllers
         [HttpGet]
         public IActionResult GraficoChamados()
         {
-            var dados = _context.Chamados
+            var dados = _context.Chamado
                 .GroupBy(c => c.DataAbertura.Date)
                 .Select(g => new
                 {

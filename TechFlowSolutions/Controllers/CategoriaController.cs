@@ -16,12 +16,12 @@ namespace TechFlowSolutions.Controllers
         }
 
         [HttpGet]
-        public IActionResult Listar() => Ok(_db.Categorias.ToList());
+        public IActionResult Listar() => Ok(_db.Categoria.ToList());
 
         [HttpPost]
         public IActionResult Criar([FromBody] Categoria model)
         {
-            _db.Categorias.Add(model);
+            _db.Categoria.Add(model);
             _db.SaveChanges();
 
             return Ok(model);
@@ -30,10 +30,10 @@ namespace TechFlowSolutions.Controllers
         [HttpDelete("{id}")]
         public IActionResult Remover(int id)
         {
-            var categoria = _db.Categorias.Find(id);
+            var categoria = _db.Categoria.Find(id);
             if (categoria == null) return NotFound();
 
-            _db.Categorias.Remove(categoria);
+            _db.Categoria.Remove(categoria);
             _db.SaveChanges();
 
             return Ok(new { message = "Categoria removida" });

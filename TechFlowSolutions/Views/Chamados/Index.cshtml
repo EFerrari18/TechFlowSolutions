@@ -1,43 +1,79 @@
 ﻿@model IEnumerable<TechFlowSolutions.Models.Chamado>
+
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Gerenciar Chamados";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
 }
 
-<div class="card">
-    <h1 class="page-title">Gerenciar Chamados</h1>
+<div style="padding: 20px 40px;">
 
-    <p>
-        <a class="btn" href="/Chamados/Novo">Abrir Novo Chamado</a>
-    </p>
+    <h2>Gerenciar Chamados</h2>
 
-    <table>
+    <!-- Botão Novo Chamado -->
+    <div style="margin: 15px 0;">
+        <a href="/Chamados/Novo"
+           style="
+               padding: 10px 16px;
+               background-color: #b4ff00;
+               border-radius: 6px;
+               font-weight: bold;
+               color: black;
+               text-decoration: none;
+           ">
+            + Abrir Novo Chamado
+        </a>
+    </div>
+
+    <table class="tabela">
         <thead>
             <tr>
-                <th>Título</th>
+                <th style="padding-left: 12px;">Título</th>
                 <th>Status</th>
                 <th>Prioridade</th>
                 <th>Data Abertura</th>
-                <th>Ações</th>
+                <th style="width: 180px;">Ações</th>
             </tr>
         </thead>
+
         <tbody>
-            @foreach (var c in Model)
+            @foreach (var item in Model)
             {
-                <tr>
-                    <td>@c.Titulo</td>
-                    <td>@c.Status</td>
-                    <td>@c.Prioridade</td>
-                    <td>@c.DataAbertura.ToString("dd/MM/yyyy HH:mm")</td>
+                <tr style="border-bottom: 1px solid #e0e0e0;">
+                    <td style="padding: 10px 12px;">@item.Titulo</td>
+                    <td>@item.Status</td>
+                    <td>@item.Prioridade</td>
+                    <td>@item.DataAbertura.ToString("dd/MM/yyyy HH:mm")</td>
+
                     <td>
-                        <a href="/Chamados/Editar/@c.IdChamado" class="btn btn-secondary">Editar</a>
-                        <a href="/Usuario/Ecluir/@c.IdChamado" class="btn btn-danger"
-                           onclick="return confirm('Deseja realmente excluir este Chamnado?');">
+                        <a href="/Chamados/Editar/@item.IdChamado"
+                           style="
+                                   padding: 6px 14px;
+                                   background-color: #dcdcdc;
+                                   border-radius: 6px;
+                                   margin-right: 8px;
+                                   text-decoration: none;
+                                   color: black;
+                                   font-weight: bold;
+                               ">
+                            Editar
+                        </a>
+
+                        <a href="/Chamados/Excluir/@item.IdChamado"
+                           onclick="return confirm('Tem certeza que deseja excluir?')"
+                           style="
+                                   padding: 6px 14px;
+                                   background-color: #ff3b58;
+                                   border-radius: 6px;
+                                   color: white;
+                                   text-decoration: none;
+                               ">
                             Excluir
-                       
+                        </a>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
+
 </div>

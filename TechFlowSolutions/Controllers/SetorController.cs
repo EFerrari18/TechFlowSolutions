@@ -16,12 +16,12 @@ namespace TechFlowSolutions.Controllers
         }
 
         [HttpGet]
-        public IActionResult Listar() => Ok(_db.Setores.ToList());
+        public IActionResult Listar() => Ok(_db.Setor.ToList());
 
         [HttpPost]
         public IActionResult Criar([FromBody] Setor model)
         {
-            _db.Setores.Add(model);
+            _db.Setor.Add(model);
             _db.SaveChanges();
             return Ok(model);
         }
@@ -29,10 +29,10 @@ namespace TechFlowSolutions.Controllers
         [HttpDelete("{id}")]
         public IActionResult Remover(int id)
         {
-            var setor = _db.Setores.Find(id);
+            var setor = _db.Setor.Find(id);
             if (setor == null) return NotFound();
 
-            _db.Setores.Remove(setor);
+            _db.Setor.Remove(setor);
             _db.SaveChanges();
             return Ok(new { message = "Setor removido" });
         }

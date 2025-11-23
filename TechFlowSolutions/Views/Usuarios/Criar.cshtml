@@ -1,8 +1,31 @@
 ﻿@model TechFlowSolutions.Models.Usuario
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Gerenciar Usuários";
+    ViewBag.Title = "Criar Usuário";
 }
+
+<div class="center-wrapper">
+    <form method="post" class="form-box">
+        <h1>Novo Usuário</h1>
+
+        <label>Nome</label>
+        <input type="text" name="Nome" required />
+
+        <label>Email</label>
+        <input type="email" name="Email" required />
+
+        <label>Senha</label>
+        <input type="password" name="SenhaHash" required />
+
+        <label>Perfil</label>
+        <select name="Perfil">
+            <option>Administrador</option>
+            <option>Usuario</option>
+        </select>
+
+        <button type="submit" class="btn-salvar">Salvar</button>
+    </form>
+</div>
 
 <style>
     body {
@@ -47,32 +70,15 @@
         border-radius: 8px;
         text-decoration: none;
     }
+
+    .btn-salvar {
+        background: #B4FF00;
+        border: none;
+        width: 100%;
+        padding: 14px;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 10px;
+    }
 </style>
-
-<div class="container">
-    <div class="card">
-        <h1>Novo Usuário</h1>
-
-        <form method="post">
-
-            <label>Nome</label>
-            <input name="Nome" />
-
-            <label>Email</label>
-            <input name="Email" />
-
-            <label>Senha</label>
-            <input name="Senha" type="password" />
-
-            <label>Perfil</label>
-            <select name="Perfil">
-                <option>Administrador</option>
-                <option>Tecnico</option>
-                <option>Usuario</option>
-            </select>
-
-            <button class="btn">Salvar</button>
-
-        </form>
-    </div>
-</div>

@@ -9,20 +9,18 @@
         width: 100%;
         display: flex;
         justify-content: center;
-        margin-top: 5px;
-        align-items: center;
+        margin-top: 40px;
     }
 
     .form-box {
-        width: 420px; 
+        width: 420px;
         padding: 26px;
         border-radius: 16px;
-        background: white;
+        background: #fff;
         box-shadow: 0 4px 18px rgba(0,0,0,0.15);
         display: flex;
         flex-direction: column;
         gap: 18px;
-        margin-top: 20px;
     }
 
         .form-box input,
@@ -57,21 +55,24 @@
 </style>
 
 <div class="center-wrapper">
-    <form method="post" class="form-box">
+    <form method="post" asp-action="Salvar" class="form-box">
         <h1>Abrir Chamado</h1>
+
         <label>Título</label>
-        <input type="text" name="Titulo" />
+        <input asp-for="Titulo" />
+
         <label>Descrição</label>
-        <textarea name="Descricao" rows="2"></textarea>
+        <textarea asp-for="Descricao" rows="3"></textarea>
 
         <label>Categoria</label>
-        <select name="CategoriaId">
-            <option>Redes</option>
-            <option>Software</option>
-            <option>Infraestrutura</option>
+        <select asp-for="CategoriaId">
+            <option value="1">Redes</option>
+            <option value="2">Software</option>
+            <option value="3">Infraestrutura</option>
         </select>
+
         <label>Prioridade</label>
-        <select name="Prioridade">
+        <select asp-for="Prioridade">
             <option>Baixa</option>
             <option>Média</option>
             <option>Alta</option>

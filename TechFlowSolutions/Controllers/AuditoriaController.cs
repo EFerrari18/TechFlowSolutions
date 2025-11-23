@@ -16,14 +16,14 @@ namespace TechFlowSolutions.Controllers
         }
 
         [HttpGet]
-        public IActionResult Listar() => Ok(_db.Auditorias.ToList());
+        public IActionResult Listar() => Ok(_db.Auditoria.ToList());
 
         [HttpPost]
         public IActionResult Registrar([FromBody] Auditoria model)
         {
             model.DataAcao = DateTime.Now;
 
-            _db.Auditorias.Add(model);
+            _db.Auditoria.Add(model);
             _db.SaveChanges();
 
             return Ok(model);

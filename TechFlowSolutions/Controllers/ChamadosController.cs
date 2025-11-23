@@ -5,21 +5,24 @@ using TechFlowSolutions.Models;
 
 namespace TechFlowSolutions.Controllers
 {
+    // ============================================================
+    // 🟧 API DE CHAMADOS (no mesmo arquivo)
+    // ============================================================
     [ApiController]
-    [Route("api/chamado")]
-    public class ChamadoController : ControllerBase
+    [Route("api/chamados")]
+    public class ChamadoApiController : ControllerBase
     {
         private readonly ApplicationDbContext _db;
 
-        public ChamadoController(ApplicationDbContext db)
+        public ChamadoApiController(ApplicationDbContext db)
         {
             _db = db;
         }
 
         [HttpGet]
-        public IActionResult Listar()
+        public IActionResult GetAll()
         {
-            var lista = _db.Chamados
+            var lista = _db.Chamado
                 .Include(c => c.Usuario)
                 .Include(c => c.Tecnico)
                 .Include(c => c.Categoria)
@@ -29,29 +32,13 @@ namespace TechFlowSolutions.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult Buscar(int id)
+        public IActionResult Get(int id)
         {
-            var chamado = _db.Chamados
-                .Include(c => c.Usuario)
-                .Include(c => c.Tecnico)
-                .Include(c => c.Categoria)
-                .FirstOrDefault(c => c.IdChamado == id);
-
-            if (chamado == null) return NotFound();
+            var chamado = _db.Chamado.Find(id);
+            if (chamado == null)
+                return NotFound();
 
             return Ok(chamado);
-        }
-
-        [HttpGet("usuario/{idUsuario}")]
-        public IActionResult ListarPorUsuario(int idUsuario)
-        {
-            var lista = _db.Chamados
-                .Where(c => c.UsuarioId == idUsuario)
-                .Include(c => c.Categoria)
-                .OrderByDescending(c => c.DataAbertura)
-                .ToList();
-
-            return Ok(lista);
         }
 
         [HttpPost]
@@ -60,7 +47,7 @@ namespace TechFlowSolutions.Controllers
             model.DataAbertura = DateTime.Now;
             model.Status = "Aberto";
 
-            _db.Chamados.Add(model);
+            _db.Chamado.Add(model);
             _db.SaveChanges();
 
             return Ok(model);
@@ -69,8 +56,9 @@ namespace TechFlowSolutions.Controllers
         [HttpPut("{id}")]
         public IActionResult Atualizar(int id, [FromBody] Chamado model)
         {
-            var chamado = _db.Chamados.Find(id);
-            if (chamado == null) return NotFound();
+            var chamado = _db.Chamado.Find(id);
+            if (chamado == null)
+                return NotFound();
 
             chamado.Status = model.Status;
             chamado.Prioridade = model.Prioridade;
@@ -78,19 +66,106 @@ namespace TechFlowSolutions.Controllers
             chamado.DataFechamento = model.DataFechamento;
 
             _db.SaveChanges();
+
             return Ok(chamado);
         }
 
         [HttpDelete("{id}")]
         public IActionResult Remover(int id)
         {
-            var chamado = _db.Chamados.Find(id);
-            if (chamado == null) return NotFound();
+            var chamado = _db.Chamado.Find(id);
+            if (chamado == null)
+                return NotFound();
 
-            _db.Chamados.Remove(chamado);
+            _db.Chamado.Remove(chamado);
             _db.SaveChanges();
 
-            return Ok(new { message = "Chamado removido" });
+            return Ok(new { msg = "Chamado removido" });
+        }
+    }
+
+
+
+    // ============================================================
+    // 🟦 MVC DE CHAMADOS (no mesmo arquivo)
+    // ============================================================
+    public class ChamadosController : Controller
+    {
+        private readonly ApplicationDbContext _db;
+
+        public ChamadosController(ApplicationDbContext db)
+        {
+            _db = db;
+        }
+
+        // LISTAR
+        public IActionResult Index()
+        {
+            var lista = _db.Chamado
+                .OrderByDescending(c => c.DataAbertura)
+                .ToList();
+
+            return View(lista);
+        }
+
+        // NOVO
+        public IActionResult Novo()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Salvar(Chamado chamado)
+        {
+            chamado.DataAbertura = DateTime.Now;
+            chamado.Status = "Aberto";
+
+            _db.Chamado.Add(chamado);
+            _db.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
+        // EDITAR (GET)
+        public IActionResult Editar(int id)
+        {
+            var chamado = _db.Chamado.Find(id);
+            if (chamado == null)
+                return NotFound();
+
+            return View(chamado);
+        }
+
+        // EDITAR (POST)
+        [HttpPost]
+        public IActionResult Editar(Chamado model)
+        {
+            var chamado = _db.Chamado.Find(model.IdChamado);
+            if (chamado == null)
+                return NotFound();
+
+            chamado.Titulo = model.Titulo;
+            chamado.Descricao = model.Descricao;
+            chamado.Status = model.Status;
+            chamado.Prioridade = model.Prioridade;
+            chamado.TecnicoId = model.TecnicoId;
+
+            _db.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
+        // EXCLUIR
+        public IActionResult Excluir(int id)
+        {
+            var chamado = _db.Chamado.Find(id);
+            if (chamado == null)
+                return NotFound();
+
+            _db.Chamado.Remove(chamado);
+            _db.SaveChanges();
+
+            return RedirectToAction("Index");
         }
     }
 }

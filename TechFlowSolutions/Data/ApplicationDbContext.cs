@@ -6,87 +6,29 @@ namespace TechFlowSolutions.Data
     public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
-        {
-        }
-
-        public DbSet<Usuario> Usuarios { get; set; }
-        public DbSet<Setor> Setores { get; set; }
-        public DbSet<Categoria> Categorias { get; set; }
-        public DbSet<Chamado> Chamados { get; set; }
-        public DbSet<HistoricoChamado> Historicos { get; set; }
-        public DbSet<FaqItem> FaqItens { get; set; }
-        public DbSet<Auditoria> Auditorias { get; set; }
+            : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Auditoria>().HasKey(a => a.IdAuditoria);
+            modelBuilder.Entity<Usuario>().HasKey(u => u.IdUsuario);
+            modelBuilder.Entity<Tecnico>().HasKey(t => t.IdTecnico);
+            modelBuilder.Entity<Setor>().HasKey(s => s.IdSetor);
+            modelBuilder.Entity<Categoria>().HasKey(c => c.IdCategoria);
+            modelBuilder.Entity<Chamado>().HasKey(c => c.IdChamado);
+            modelBuilder.Entity<HistoricoChamado>().HasKey(h => h.IdHistorico);
+            modelBuilder.Entity<FaqItem>().HasKey(f => f.IdFaq);
+
             base.OnModelCreating(modelBuilder);
-
-            //
-            // USUARIO -> SETOR
-            //
-            modelBuilder.Entity<Usuario>()
-                .HasOne(u => u.Setor)
-                .WithMany()
-                .HasForeignKey(u => u.SetorId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            //
-            // CHAMADO -> USUARIO (CRIADOR)
-            //
-            modelBuilder.Entity<Chamado>()
-                .HasOne(c => c.Usuario)
-                .WithMany()
-                .HasForeignKey(c => c.UsuarioId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            //
-            // CHAMADO -> TECNICO
-            //
-            modelBuilder.Entity<Chamado>()
-                .HasOne(c => c.Tecnico)
-                .WithMany()
-                .HasForeignKey(c => c.TecnicoId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            //
-            // CHAMADO -> CATEGORIA
-            //
-            modelBuilder.Entity<Chamado>()
-                .HasOne(c => c.Categoria)
-                .WithMany(ca => ca.Chamados)
-                .HasForeignKey(c => c.CategoriaId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            //
-            // HISTORICO -> CHAMADO
-            //
-            modelBuilder.Entity<HistoricoChamado>()
-                .HasOne(h => h.Chamado)
-                .WithMany(c => c.Historico)
-                .HasForeignKey(h => h.ChamadoId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            //
-            // HISTORICO -> TECNICO
-            //
-            modelBuilder.Entity<HistoricoChamado>()
-                .HasOne(h => h.Tecnico)
-                .WithMany()
-                .HasForeignKey(h => h.TecnicoId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            //
-            // AUDITORIA -> USUARIO
-            //
-            modelBuilder.Entity<Auditoria>()
-                .HasKey(a => a.IdAuditoria);
-
-            modelBuilder.Entity<Auditoria>()
-                .HasOne(a => a.Usuario)
-                .WithMany()
-                .HasForeignKey(a => a.UsuarioId)
-                .OnDelete(DeleteBehavior.Restrict);
         }
+
+        public DbSet<Usuario> Usuario { get; set; }
+        public DbSet<Tecnico> Tecnicos{ get; set; }
+        public DbSet<Setor> Setor{ get; set; }
+        public DbSet<Categoria> Categoria { get; set; }
+        public DbSet<Chamado> Chamado { get; set; }
+        public DbSet<HistoricoChamado> Historico { get; set; }
+        public DbSet<FaqItem> FaqItem { get; set; }
+        public DbSet<Auditoria> Auditoria { get; set; }
     }
 }

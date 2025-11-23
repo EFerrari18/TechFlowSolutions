@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TechFlowSolutions.Data;
 using TechFlowSolutions.Models;
-using System.Linq;
 
 namespace TechFlowSolutions.Controllers
 {
@@ -16,7 +16,7 @@ namespace TechFlowSolutions.Controllers
 
         public IActionResult Login()
         {
-            // se já estiver logado, vai pro dashboard
+            // Se já estiver logado, vai para o Dashboard
             if (HttpContext.Session.GetInt32("UserId") != null)
                 return RedirectToAction("Index", "Home");
 
@@ -26,16 +26,31 @@ namespace TechFlowSolutions.Controllers
         [HttpPost]
         public IActionResult Login(string email, string senha)
         {
-            // aqui estou usando SenhaHash como senha simples
-            var user = _context.Usuarios
-                .FirstOrDefault(u => u.Email == email && u.SenhaHash == senha);
-
-            if (user == null || user.Perfil != "Administrador")
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(senha))
             {
-                ViewBag.Erro = "Credenciais inválidas ou usuário não é Administrador.";
+                ViewBag.Erro = "Preencha todos os campos.";
                 return View();
             }
 
+            // LOGIN SIMPLES (senha armazenada em SenhaHash)
+            var user = _context.Usuario
+                .AsNoTracking()
+                .FirstOrDefault(u => u.Email == email && u.SenhaHash == senha);
+
+            if (user == null)
+            {
+                ViewBag.Erro = "Email ou senha incorretos.";
+                return View();
+            }
+
+            // Somente administradores acessam o sistema web
+            if (user.Perfil != "Administrador")
+            {
+                ViewBag.Erro = "Acesso restrito. Apenas Administradores podem acessar.";
+                return View();
+            }
+
+            // Criar Sessão
             HttpContext.Session.SetInt32("UserId", user.IdUsuario);
             HttpContext.Session.SetString("Nome", user.Nome);
             HttpContext.Session.SetString("Perfil", user.Perfil);

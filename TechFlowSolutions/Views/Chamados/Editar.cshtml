@@ -1,38 +1,67 @@
 ﻿@model TechFlowSolutions.Models.Chamado
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Editar Chamado";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
 }
 
-<div class="card form-box">
-    <h1 class="page-title">Editar Chamado</h1>
+<div style="
+    max-width: 600px;
+    margin: 40px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+">
 
-    <form method="post">
+    <h2 style="font-size: 26px; font-weight: 600; margin-bottom: 25px;">
+        Editar Chamado
+    </h2>
 
-        <input type="hidden" asp-for="Id" />
+    <form method="post" action="/Chamados/Editar">
 
-        <label>Título</label>
-        <input asp-for="Titulo" />
+        <input type="hidden" name="IdChamado" value="@Model.IdChamado" />
 
-        <label>Descrição</label>
-        <textarea asp-for="Descricao" rows="4"></textarea>
+        <!-- TÍTULO -->
+        <label style="font-size: 16px; font-weight: 600;">Título</label>
+        <input type="text"
+               name="Titulo"
+               value="@Model.Titulo"
+               required
+               style="width:100%; padding:10px; border-radius:8px; border:1px solid #ccc; margin-bottom:18px;" />
 
-        <label>Prioridade</label>
-        <select asp-for="Prioridade">
-            <option>Baixa</option>
-            <option>Média</option>
-            <option>Alta</option>
+        <!-- DESCRIÇÃO -->
+        <label style="font-size: 16px; font-weight: 600;">Descrição</label>
+        <textarea name="Descricao"
+                  rows="4"
+                  required
+                  style="width:100%; padding:10px; border-radius:8px; border:1px solid #ccc; margin-bottom:18px;">@Model.Descricao</textarea>
+
+        <!-- STATUS -->
+        <label style="font-size: 16px; font-weight: 600;">Status</label>
+        <select name="Status"
+                style="width:100%; padding:10px; border-radius:8px; border:1px solid #ccc; margin-bottom:18px;">
+            <option value="Aberto" @(Model.Status == "Aberto" ? "selected" : "")>Aberto</option>
+            <option value="Em Atendimento" @(Model.Status == "Em Atendimento" ? "selected" : "")>Em Atendimento</option>
+            <option value="Fechado" @(Model.Status == "Fechado" ? "selected" : "")>Fechado</option>
+            <option value="Resolvido" @(Model.Status == "Resolvido" ? "selected" : "")>Resolvido</option>
         </select>
 
-        <label>Status</label>
-        <select asp-for="Status">
-            <option>Aberto</option>
-            <option>Em Atendimento</option>
-            <option>Resolvido</option>
-            <option>Fechado</option>
+        <!-- PRIORIDADE -->
+        <label style="font-size: 16px; font-weight: 600;">Prioridade</label>
+        <select name="Prioridade"
+                style="width:100%; padding:10px; border-radius:8px; border:1px solid #ccc; margin-bottom:18px;">
+            <option value="Alta" @(Model.Prioridade == "Alta" ? "selected" : "")>Alta</option>
+            <option value="Média" @(Model.Prioridade == "Média" ? "selected" : "")>Média</option>
+            <option value="Baixa" @(Model.Prioridade == "Baixa" ? "selected" : "")>Baixa</option>
         </select>
 
-        <button type="submit" class="btn btn-primary">Salvar</button>
-        <a href="/Chamados/Index" class="btn btn-secondary">Voltar</a>
+        <!-- BOTÃO -->
+        <button type="submit"
+                style="background:#b4ff00; padding:10px 24px; border:none; border-radius:8px;
+                       font-weight:600; cursor:pointer; font-size:16px;">
+            Salvar
+        </button>
+
     </form>
 </div>

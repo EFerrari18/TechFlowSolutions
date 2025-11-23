@@ -7,6 +7,7 @@
         public int TotalResolvidos { get; set; }
         public int TotalFechados { get; set; }
 
-        public List<Chamado>? ChamadosRecentes { get; set; }
+        // Lista com últimos chamados (Dashboard Recentes)
+        public List<Chamado> ChamadosRecentes { get; set; } = new List<Chamado>();
     }
 }

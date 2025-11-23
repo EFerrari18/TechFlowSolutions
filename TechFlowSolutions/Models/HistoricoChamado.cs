@@ -6,9 +6,9 @@
         public int ChamadoId { get; set; }
         public int TecnicoId { get; set; }
         public DateTime DataRegistro { get; set; }
-        public string Descricao { get; set; }
+        public string Descricao { get; set; } = null!;
 
-        public Chamado? Chamado { get; set; }
-        public Usuario? Tecnico { get; set; }
+        public Chamado Chamado { get; set; } = null!;
+        public Tecnico Tecnico { get; set; } = null!;
     }
 }

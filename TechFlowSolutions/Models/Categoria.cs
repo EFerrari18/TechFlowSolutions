@@ -2,9 +2,9 @@
 {
     public class Categoria
     {
-        public int Id { get; set; }
-        public string Nome { get; set; }
+        public int IdCategoria { get; set; }
+        public string Nome { get; set; } = null!;
 
-        public List<Chamado>? Chamados { get; set; }
+        public ICollection<Chamado> Chamados { get; set; } = new List<Chamado>();
     }
 }

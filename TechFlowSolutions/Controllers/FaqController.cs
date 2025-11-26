@@ -1,129 +1,50 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TechFlowSolutions.Data;
 using TechFlowSolutions.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace TechFlowSolutions.Controllers
 {
-    // ================================================
-    // 🟩 API DO FAQ
-    // ================================================
-    [ApiController]
-    [Route("api/faq")]
-    public class FaqApiController : ControllerBase
-    {
-        private readonly ApplicationDbContext _db;
-
-        public FaqApiController(ApplicationDbContext db)
-        {
-            _db = db;
-        }
-
-        [HttpGet]
-        public IActionResult Listar()
-        {
-            var lista = _db.FaqItem.OrderBy(f => f.Pergunta).ToList();
-            return Ok(lista);
-        }
-
-        [HttpPost]
-        public IActionResult Criar([FromBody] FaqItem model)
-        {
-            model.DataCadastro = DateTime.Now;
-
-            _db.FaqItem.Add(model);
-            _db.SaveChanges();
-            return Ok(model);
-        }
-
-        [HttpDelete("{id}")]
-        public IActionResult Remover(int id)
-        {
-            var item = _db.FaqItem.Find(id);
-            if (item == null)
-                return NotFound();
-
-            _db.FaqItem.Remove(item);
-            _db.SaveChanges();
-
-            return Ok(new { message = "Item removido" });
-        }
-    }
-
-    // ================================================
-    // 🟦 CONTROLLER MVC - RENDERIZA AS TELAS
-    // ================================================
     public class FaqController : Controller
     {
-        private readonly ApplicationDbContext _db;
-
-        public FaqController(ApplicationDbContext db)
+        // === Base interna de perguntas/respostas com categorias ===
+        private static readonly List<FaqItem> DadosFaq = new List<FaqItem>
         {
-            _db = db;
-        }
+            // 📌 Categoria: Chamados
+            new FaqItem { Categoria="Chamados", Pergunta="Como abrir um chamado?", Resposta="Clique em 'Abrir Chamado', preencha o formulário e clique em Salvar." },
+            new FaqItem { Categoria="Chamados", Pergunta="Posso editar um chamado?", Resposta="Sim. No menu Gerenciar Chamados, clique em Editar no item desejado." },
+            new FaqItem { Categoria="Chamados", Pergunta="Como excluir um chamado?", Resposta="Em Gerenciar Chamados, clique em Excluir e confirme a ação." },
+            new FaqItem { Categoria="Chamados", Pergunta="O que significa a prioridade do chamado?", Resposta="Define o nível de urgência: Baixa, Média ou Alta." },
 
-        // /Faq/Index
-        public IActionResult Index()
+            // 📌 Categoria: Conta / Acesso
+            new FaqItem { Categoria="Acesso", Pergunta="Como redefinir minha senha?", Resposta="Entre em contato com o administrador para restauração da senha." },
+            new FaqItem { Categoria="Acesso", Pergunta="Esqueci meu email de login", Resposta="Solicite ao suporte a verificação dos seus dados de acesso." },
+
+            // 📌 Categoria: Sistema & Erros
+            new FaqItem { Categoria="Sistema", Pergunta="O sistema não carrega", Resposta="Atualize a página ou tente novamente em instantes. Se persistir, contate o suporte." },
+            new FaqItem { Categoria="Sistema", Pergunta="Erro ao salvar um chamado", Resposta="Revise os campos obrigatórios. Se continuar, comunique suporte com print do erro." },
+
+            // 📌 Categoria: Status e acompanhamento
+            new FaqItem { Categoria="Status", Pergunta="Como acompanhar o status do meu chamado?", Resposta="Acesse Gerenciar Chamados para ver o andamento." },
+            new FaqItem { Categoria="Status", Pergunta="O que significa status Em Atendimento?", Resposta="O técnico recebeu sua solicitação e está trabalhando na solução." }
+        };
+
+        // VIEW PRINCIPAL + BUSCA
+        public IActionResult Index(string q)
         {
-            var lista = _db.FaqItem.OrderBy(f => f.Pergunta).ToList();
+            ViewBag.Search = q;
+
+            var lista = DadosFaq;
+
+            if (!string.IsNullOrEmpty(q))
+            {
+                q = q.ToLower();
+                lista = lista
+                    .Where(f =>
+                        f.Pergunta.ToLower().Contains(q) ||
+                        f.Resposta.ToLower().Contains(q))
+                    .ToList();
+            }
+
             return View(lista);
-        }
-
-        // /Faq/Novo
-        public IActionResult Novo()
-        {
-            return View();
-        }
-
-        // POST /Faq/Salvar
-        [HttpPost]
-        public IActionResult Salvar(FaqItem model)
-        {
-            model.DataCadastro = DateTime.Now;
-
-            _db.FaqItem.Add(model);
-            _db.SaveChanges();
-
-            return RedirectToAction("Index");
-        }
-
-        // /Faq/Editar/5
-        public IActionResult Editar(int id)
-        {
-            var item = _db.FaqItem.Find(id);
-            if (item == null)
-                return NotFound();
-
-            return View(item);
-        }
-
-        // POST /Faq/Editar
-        [HttpPost]
-        public IActionResult Editar(FaqItem model)
-        {
-            var item = _db.FaqItem.Find(model.IdFaq);
-            if (item == null)
-                return NotFound();
-
-            item.Pergunta = model.Pergunta;
-            item.Resposta = model.Resposta;
-
-            _db.SaveChanges();
-
-            return RedirectToAction("Index");
-        }
-
-        // /Faq/Excluir/5
-        public IActionResult Excluir(int id)
-        {
-            var item = _db.FaqItem.Find(id);
-            if (item == null)
-                return NotFound();
-
-            _db.FaqItem.Remove(item);
-            _db.SaveChanges();
-
-            return RedirectToAction("Index");
         }
     }
 }

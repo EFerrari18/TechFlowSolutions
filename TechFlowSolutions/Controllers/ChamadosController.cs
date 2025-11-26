@@ -5,19 +5,15 @@ using TechFlowSolutions.Models;
 
 namespace TechFlowSolutions.Controllers
 {
-    // ============================================================
-    // 🟧 API DE CHAMADOS (no mesmo arquivo)
-    // ============================================================
+    // ============================================
+    // 🟧 API - REST
+    // ============================================
     [ApiController]
     [Route("api/chamados")]
     public class ChamadoApiController : ControllerBase
     {
         private readonly ApplicationDbContext _db;
-
-        public ChamadoApiController(ApplicationDbContext db)
-        {
-            _db = db;
-        }
+        public ChamadoApiController(ApplicationDbContext db) { _db = db; }
 
         [HttpGet]
         public IActionResult GetAll()
@@ -26,8 +22,8 @@ namespace TechFlowSolutions.Controllers
                 .Include(c => c.Usuario)
                 .Include(c => c.Tecnico)
                 .Include(c => c.Categoria)
+                .OrderByDescending(c => c.DataAbertura)
                 .ToList();
-
             return Ok(lista);
         }
 
@@ -35,10 +31,7 @@ namespace TechFlowSolutions.Controllers
         public IActionResult Get(int id)
         {
             var chamado = _db.Chamado.Find(id);
-            if (chamado == null)
-                return NotFound();
-
-            return Ok(chamado);
+            return chamado == null ? NotFound() : Ok(chamado);
         }
 
         [HttpPost]
@@ -46,10 +39,8 @@ namespace TechFlowSolutions.Controllers
         {
             model.DataAbertura = DateTime.Now;
             model.Status = "Aberto";
-
             _db.Chamado.Add(model);
             _db.SaveChanges();
-
             return Ok(model);
         }
 
@@ -57,14 +48,15 @@ namespace TechFlowSolutions.Controllers
         public IActionResult Atualizar(int id, [FromBody] Chamado model)
         {
             var chamado = _db.Chamado.Find(id);
-            if (chamado == null)
-                return NotFound();
+            if (chamado == null) return NotFound();
 
+            chamado.Titulo = model.Titulo;
+            chamado.Descricao = model.Descricao;
             chamado.Status = model.Status;
             chamado.Prioridade = model.Prioridade;
+            chamado.CategoriaId = model.CategoriaId;
             chamado.TecnicoId = model.TecnicoId;
             chamado.DataFechamento = model.DataFechamento;
-
             _db.SaveChanges();
 
             return Ok(chamado);
@@ -74,55 +66,50 @@ namespace TechFlowSolutions.Controllers
         public IActionResult Remover(int id)
         {
             var chamado = _db.Chamado.Find(id);
-            if (chamado == null)
-                return NotFound();
+            if (chamado == null) return NotFound();
 
             _db.Chamado.Remove(chamado);
             _db.SaveChanges();
-
-            return Ok(new { msg = "Chamado removido" });
+            return Ok(new { message = "Chamado removido" });
         }
     }
 
 
-
-    // ============================================================
-    // 🟦 MVC DE CHAMADOS (no mesmo arquivo)
-    // ============================================================
+    // ============================================
+    // 🟦 MVC - Telas
+    // ============================================
     public class ChamadosController : Controller
     {
         private readonly ApplicationDbContext _db;
-
-        public ChamadosController(ApplicationDbContext db)
-        {
-            _db = db;
-        }
+        public ChamadosController(ApplicationDbContext db) { _db = db; }
 
         // LISTAR
         public IActionResult Index()
         {
             var lista = _db.Chamado
+                .Include(c => c.Categoria)
                 .OrderByDescending(c => c.DataAbertura)
                 .ToList();
-
             return View(lista);
         }
 
-        // NOVO
+        // TELA NOVO
         public IActionResult Novo()
         {
+            ViewBag.Categorias = _db.Categoria.ToList();
             return View();
         }
 
+        // SALVAR NOVO
         [HttpPost]
         public IActionResult Salvar(Chamado chamado)
         {
             chamado.DataAbertura = DateTime.Now;
             chamado.Status = "Aberto";
+            chamado.UsuarioId = HttpContext.Session.GetInt32("UserId") ?? 1;
 
             _db.Chamado.Add(chamado);
             _db.SaveChanges();
-
             return RedirectToAction("Index");
         }
 
@@ -133,6 +120,7 @@ namespace TechFlowSolutions.Controllers
             if (chamado == null)
                 return NotFound();
 
+            ViewBag.Categorias = _db.Categoria.ToList();
             return View(chamado);
         }
 
@@ -141,17 +129,16 @@ namespace TechFlowSolutions.Controllers
         public IActionResult Editar(Chamado model)
         {
             var chamado = _db.Chamado.Find(model.IdChamado);
-            if (chamado == null)
-                return NotFound();
+            if (chamado == null) return NotFound();
 
             chamado.Titulo = model.Titulo;
             chamado.Descricao = model.Descricao;
             chamado.Status = model.Status;
             chamado.Prioridade = model.Prioridade;
+            chamado.CategoriaId = model.CategoriaId;
             chamado.TecnicoId = model.TecnicoId;
 
             _db.SaveChanges();
-
             return RedirectToAction("Index");
         }
 
@@ -159,12 +146,10 @@ namespace TechFlowSolutions.Controllers
         public IActionResult Excluir(int id)
         {
             var chamado = _db.Chamado.Find(id);
-            if (chamado == null)
-                return NotFound();
+            if (chamado == null) return NotFound();
 
             _db.Chamado.Remove(chamado);
             _db.SaveChanges();
-
             return RedirectToAction("Index");
         }
     }

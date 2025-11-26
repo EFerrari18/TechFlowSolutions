@@ -4,34 +4,35 @@
     ViewBag.Title = "Abrir Chamado";
 }
 
+<div class="center-wrapper">
+    <form method="post" action="/Chamados/Salvar" class="form-box">
+        <h1>Abrir Chamado</h1>
+
+        <label>Título</label>
+        <input type="text" name="Titulo" required />
+
+        <label>Descrição</label>
+        <textarea name="Descricao" rows="3" required></textarea>
+
+        <label>Categoria</label>
+        <select name="CategoriaId" required>
+            @foreach (var c in ViewBag.Categorias)
+            {
+                <option value="@c.IdCategoria">@c.Nome</option>
+            }
+        </select>
+
+        <label>Prioridade</label>
+        <select name="Prioridade">
+            <option>Baixa</option>
+            <option>Média</option>
+            <option>Alta</option>
+        </select>
+
+        <button type="submit" class="btn-salvar">Salvar</button>
+    </form>
+</div>
 <style>
-    .center-wrapper {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        margin-top: 40px;
-    }
-
-    .form-box {
-        width: 420px;
-        padding: 26px;
-        border-radius: 16px;
-        background: #fff;
-        box-shadow: 0 4px 18px rgba(0,0,0,0.15);
-        display: flex;
-        flex-direction: column;
-        gap: 18px;
-    }
-
-        .form-box input,
-        .form-box textarea,
-        .form-box select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 16px;
-        }
 
     .btn-salvar {
         background: #B4FF00;
@@ -43,41 +44,4 @@
         cursor: pointer;
         margin-top: 10px;
     }
-
-    .btn-voltar {
-        background: #ddd;
-        border: none;
-        width: 100%;
-        padding: 14px;
-        border-radius: 8px;
-        cursor: pointer;
-    }
 </style>
-
-<div class="center-wrapper">
-    <form method="post" asp-action="Salvar" class="form-box">
-        <h1>Abrir Chamado</h1>
-
-        <label>Título</label>
-        <input asp-for="Titulo" />
-
-        <label>Descrição</label>
-        <textarea asp-for="Descricao" rows="3"></textarea>
-
-        <label>Categoria</label>
-        <select asp-for="CategoriaId">
-            <option value="1">Redes</option>
-            <option value="2">Software</option>
-            <option value="3">Infraestrutura</option>
-        </select>
-
-        <label>Prioridade</label>
-        <select asp-for="Prioridade">
-            <option>Baixa</option>
-            <option>Média</option>
-            <option>Alta</option>
-        </select>
-
-        <button type="submit" class="btn-salvar">Salvar</button>
-    </form>
-</div>

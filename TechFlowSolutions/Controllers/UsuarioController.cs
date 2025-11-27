@@ -139,7 +139,6 @@ namespace TechFlowSolutions.Controllers
             user.Nome = model.Nome;
             user.Email = model.Email;
             user.Perfil = model.Perfil;
-            user.SenhaHash = model.SenhaHash;
 
             _db.SaveChanges();
 

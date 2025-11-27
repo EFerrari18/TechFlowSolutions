@@ -135,7 +135,7 @@ namespace TechFlowSolutions.Controllers
             chamado.Descricao = model.Descricao;
             chamado.Status = model.Status;
             chamado.Prioridade = model.Prioridade;
-            chamado.CategoriaId = model.CategoriaId;
+            chamado.IdChamado = model.IdChamado;
             chamado.TecnicoId = model.TecnicoId;
 
             _db.SaveChanges();
